@@ -8,5 +8,6 @@ class ArticleModel extends Model
 {
     protected $table = 'articles';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['title', 'content', 'image'];
+    protected $allowedFields = ['title', 'content', 'created_at', 'updated_at'];
+    protected $useTimestamps = true;
 }

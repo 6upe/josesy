@@ -41,7 +41,26 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-
+  <style>
+    .form-container {
+        display: none;
+        margin-top: 20px;
+    }
+    .form-container.active {
+        display: block;
+    }
+    .btn-group-toggle .btn {
+        border-radius: 0;
+    }
+    .btn-group-toggle .btn:first-child {
+        border-top-left-radius: .25rem;
+        border-bottom-left-radius: .25rem;
+    }
+    .btn-group-toggle .btn:last-child {
+        border-top-right-radius: .25rem;
+        border-bottom-right-radius: .25rem;
+    }
+</style>
   <!-- =======================================================
   * Template Name: Flexor
   * Template URL: https://bootstrapmade.com/flexor-free-multipurpose-bootstrap-template/
@@ -62,7 +81,7 @@
       </div>
 
       <div class="cta d-none d-md-flex align-items-center">
-        <a href="#about" class=" top-btn scrollto">Lets Explore</a>
+        <a href="./apply.html" class=" top-btn scrollto">Apply</a>
       </div>
     </div>
   </section>
@@ -99,9 +118,9 @@
       <div class="container">
         <ol>
           <li><a href="index.html">Home</a></li>
-          <li>Apply for Training</li>
+          <li>Training / Bookings</li>
         </ol>
-        <h2>Apply for Training</h2>
+        <h2>Certified Trainings & Bookings</h2>
       </div>
     </section><!-- End Breadcrumbs -->
 
@@ -109,7 +128,232 @@
     <section id="blog" class="blog">
       <div class="container" data-aos="fade-up">
 
-        <h1>Page Under Construction</h1>
+        <div class="container col-lg-6 mt-5">
+          <div class="text-center mb-4">
+              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label class="btn btn-outline-secondary active" id="btn-training">
+                      <input type="radio" name="options" autocomplete="off" checked> Apply for Training
+                  </label>
+                  <label class="btn btn-outline-secondary" id="btn-booking">
+                      <input type="radio" name="options" autocomplete="off"> Book us!
+                  </label>
+              </div>
+          </div>
+      
+          <div id="training-form" class="form-container active">
+              <h3 class="text-center">Training Application Form</h3>
+              <form id="training-form" method="post">
+                  <div class="form-group mb-3">
+                      <label for="trainingName mb-2">Name / Organization Name</label>
+                      <input type="text" class="form-control" name="name" id="trainingName" required>
+                  </div>
+                  <div class="form-group mb-3">
+                      <label for="trainingEmail mb-2">Email</label>
+                      <input type="email" class="form-control" name="email" id="trainingEmail" required>
+                  </div>
+                  <div class="form-group mb-3">
+                      <label for="trainingService mb-2">Service Interested In</label>
+                      <select class="form-control" name="service" id="trainingService" required>
+                          <option> - </option>
+                          <option>Health Safety</option>
+                          <option>Consulting Services</option>
+                          <option>Team Building</option>
+                      </select>
+                  </div>
+                  <div class="form-group mb-3">
+                      <label for="trainingMessage mb-2">Message</label>
+                      <textarea class="form-control" id="trainingMessage" name="message" rows="4" required></textarea>
+                  </div>
+                  <div class="application-btn">
+                    <button type="submit" class="btn btn-outline-secondary btn-block w-100">Submit Application</button>
+                  </div>
+                  
+              </form>
+              <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const trainingForm = document.getElementById('training-form');
+
+                    trainingForm.addEventListener('submit', async event => {
+                        event.preventDefault();
+
+                        const applicationBtn = document.querySelector('.application-btn');
+                        applicationBtn.innerHTML = `
+                            <button class="btn btn-warning w-100" type="button" disabled>
+                                <div class="spinner-border text-light spinner-border-sm" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div> Booking...
+                            </button>`;
+
+                            const name =  document.getElementById('trainingName').value;
+                            const email =  document.getElementById('trainingEmail').value;
+                            const service =  document.getElementById('trainingService').value;
+                            const message =  document.getElementById('trainingMessage').value;
+                        
+                            const payload = { name, email, service, message };
+
+                        console.log('Payload: ', payload);
+        
+                        try {
+                            const response = await fetch('http://localhost:8080/api/v1/submit-training', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(payload)
+                            });
+        
+                            console.log('Response: ', response);
+                            const data = await response.json();
+                            console.log('Result: ', data);
+        
+                            if (data.success) {
+                                applicationBtn.innerHTML = `
+                                    <button class="btn btn-success w-100" type="button">Application Submitted! Check your Email 😉.</button>`;
+                                    Swal.fire({
+                                      title: "Application Submitted!",
+                                      text: "Application Submitted! Check your Email 😉.",
+                                      icon: "success"
+                                    });
+                            } else {
+                                applicationBtn.innerHTML = `
+                                    <button class="btn btn-danger w-100" type="submit">Oops, Something went wrong...</button>`;
+                                    Swal.fire({
+                                    title: "Oops!",
+                                    text: "Something went wrong... please email us at [info@josesyltd.com]",
+                                    icon: "error"
+                                  });
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            applicationBtn.innerHTML = `
+                                <button class="btn btn-danger w-100" type="submit">Oops, Check your Internet and try again</button>`;
+                                Swal.fire({
+                                  title: "Oops!",
+                                  text: "Check your Internet and try again please email us at [info@josesyltd.com]",
+                                  icon: "warning"
+                                });
+                        }
+                    });
+                });
+            </script>
+          </div>
+      
+          <div id="booking-form" class="form-container">
+              <h3 class="text-center">Fill form to Set Booking</h3>
+              <form id="booking-form" method="post">
+                  <div class="form-group mb-3">
+                      <label for="bookingName mb-2">Name / Organization Name</label>
+                      <input type="text" class="form-control" id="bookingName" required>
+                  </div>
+                  <div class="form-group mb-3">
+                      <label for="bookingEmail mb-2">Email</label>
+                      <input type="email" class="form-control" id="bookingEmail" required>
+                  </div>
+                  <div class="form-group mb-3">
+                      <label for="bookingService mb-2">Service Interested In</label>
+                      <select class="form-control" id="bookingService" required>
+                        <option> - </option>
+                        <option>Health Safety</option>
+                        <option>Consulting Services</option>
+                        <option>Team Building</option>
+                      </select>
+                  </div>
+                  <div class="form-group mb-3">
+                      <label for="bookingDate mb-2">Preferred Booking Date</label>
+                      <input type="date" class="form-control" id="bookingDate" required>
+                  </div>
+                  <div class="form-group mb-3">
+                      <label for="bookingMessage mb-2">Message</label>
+                      <textarea class="form-control" id="bookingMessage" rows="4" required></textarea>
+                  </div>
+                  <div class="booking-btn">
+                    <button type="submit" class="btn btn-outline-secondary btn-block w-100">Request Booking</button>
+                  </div>
+                  
+              </form>
+              <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    
+                        
+
+                  const bookingForm = document.getElementById('booking-form');
+
+                    bookingForm.addEventListener('submit', async event => {
+                      event.preventDefault();
+                        const bookingBtn = document.querySelector('.booking-btn');
+                        bookingBtn.innerHTML = `
+                            <button class="btn btn-warning w-100" type="button" disabled>
+                                <div class="spinner-border text-light spinner-border-sm" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div> Booking...
+                            </button>`;
+        
+                        const payload = {
+                            name: document.getElementById('bookingName').value,
+                            email: document.getElementById('bookingEmail').value,
+                            service: document.getElementById('bookingService').value,
+                            preferred_date: document.getElementById('bookingDate').value,
+                            message: document.getElementById('bookingMessage').value
+                        };
+                        console.log('Payload: ', payload);
+        
+                        try {
+                            const response = await fetch('http://localhost:8080/api/v1/submit-booking', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(payload)
+                            });
+        
+                            console.log('Response: ', response);
+                            const data = await response.json();
+                            console.log('Result: ', data);
+        
+                            if (data.success) {
+                                bookingBtn.innerHTML = `
+                                    <button class="btn btn-success w-100" type="button">Booking Submitted! Check your Email 😉.</button>`;
+                                    Swal.fire({
+                                      title: "Booking Submitted!",
+                                      text: "Booking Submitted! Check your Email 😉.",
+                                      icon: "success"
+                                    });
+                            } else {
+                                bookingBtn.innerHTML = `
+                                    <button class="btn btn-danger w-100" type="submit">Oops, Something went wrong... </button>`;
+                                    Swal.fire({
+                                    title: "Oops!",
+                                    text: "Something went wrong.. please email us at [info@josesyltd.com]",
+                                    icon: "error"
+                                  });
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            bookingBtn.innerHTML = `
+                                <button class="btn btn-danger w-100" type="submit">Oops, Check your Internet and try again</button>`;
+                                Swal.fire({
+                                  title: "Oops!",
+                                  text: "Check your Internet and try again please email us at [info@josesyltd.com]",
+                                  icon: "warning"
+                                });
+                        }
+                    });
+                });
+            </script>
+          </div>
+      </div>
+      
+      <script>
+          document.getElementById('btn-training').addEventListener('click', function() {
+              document.getElementById('training-form').classList.add('active');
+              document.getElementById('booking-form').classList.remove('active');
+          });
+      
+          document.getElementById('btn-booking').addEventListener('click', function() {
+              document.getElementById('booking-form').classList.add('active');
+              document.getElementById('training-form').classList.remove('active');
+          });
+      </script>
 
       </div>
     </section><!-- End Blog Section -->
@@ -194,7 +438,7 @@
   </footer><!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Vendor JS Files -->
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

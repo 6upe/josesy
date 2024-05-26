@@ -62,7 +62,7 @@
       </div>
 
       <div class="cta d-none d-md-flex align-items-center">
-        <a href="#about" class=" top-btn scrollto">Lets Explore</a>
+        <a href="./apply.html" class=" top-btn scrollto">Apply</a>
       </div>
     </div>
   </section>
@@ -109,7 +109,38 @@
     <section id="blog" class="blog">
       <div class="container" data-aos="fade-up">
 
-        <h1>Page Coming Soon!</h1>
+        <div class="row">
+
+          <div id="articles" class="col-lg-8 entries">
+
+          </div><!-- End blog entries list -->
+        
+          <div class="col-lg-4">
+        
+            <div class="sidebar">
+        
+              <h3 class="sidebar-title">Search</h3>
+              <div class="sidebar-item search-form">
+                <form action="">
+                  <input type="text">
+                  <button type="submit"><i class="bi bi-search"></i></button>
+                </form>
+              </div><!-- End sidebar search formn-->
+        
+              
+        
+              <h3 class="sidebar-title">Recent Posts</h3>
+              <div class="sidebar-item recent-posts">
+
+              </div><!-- End sidebar recent posts-->
+        
+             
+        
+            </div><!-- End sidebar -->
+        
+          </div><!-- End blog sidebar -->
+        
+        </div>
 
       </div>
     </section><!-- End Blog Section -->
@@ -127,8 +158,8 @@
            
             <img width="50%" src="./assets/img/logo.png" alt="">
             <p>
-              18 Yembe Avenue, Kanini, <br> Ndola, Copperbelt, Zambia<br>
-              United States <br><br>
+              18 Yembe Avenue, Kanini, <br> Ndola, Copperbelt, <br>
+              Zambia<br><br>
               <strong>Phone:</strong> +260 964 050 710 / +260 978 289 505<br>
               <strong>Email:</strong> info@josesyltd.com<br>
             </p>
@@ -194,6 +225,109 @@
   </footer><!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <script>
+    async function fetchArticles() {
+        try {
+            const response = await fetch('http://localhost:8080/api/v1/articles');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const articles = await response.json();
+            displayArticles(articles);
+            displayRecentPosts(articles);
+            console.log(articles);
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    }
+
+    function displayArticles(articles) {
+        const articlesContainer = document.getElementById('articles');
+        articles.forEach(article => {
+            const articleCard = `
+            <article class="entry">
+                <div id="carousel-${article.id}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        ${generateCarouselItems(article.images)}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-${article.id}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-${article.id}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <h2 class="entry-title">${article.title}</h2>
+                <div class="entry-meta">
+                    <ul>
+                        <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <time datetime="2020-01-01">${article.created_at}</time></li>
+                       
+                    </ul>
+                </div>
+                <div class="entry-content">
+                    <p>${truncateText(article.content, 100)}</p>
+                    <div class="read-more">
+                        <a href="#">Read More</a>
+                    </div>
+                </div>
+            </article><!-- End blog entry -->
+            `;
+            articlesContainer.innerHTML += articleCard;
+        });
+    }
+
+    function generateCarouselItems(images) {
+        let carouselItems = '';
+        images.forEach((image, index) => {
+            carouselItems += `
+            <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                <img src="http://localhost:8080/uploads/articles/${image.filename}" class="d-block w-100" alt="Slide ${index + 1}">
+            </div>
+            `;
+        });
+        return carouselItems;
+    }
+
+    function truncateText(text, limit) {
+        const words = text.split(' ');
+        if (words.length > limit) {
+            return words.slice(0, limit).join(' ') + '...';
+        }
+        return text;
+    }
+
+
+    function displayRecentPosts(articles) {
+        const recentPostsContainer = document.querySelector('.sidebar-item.recent-posts');
+        articles.slice(0, 5).forEach(article => {
+            const postItem = `
+            <div class="post-item clearfix">
+                <img src="http://localhost:8080/uploads/articles/${article.images[0].filename}" alt="">
+                <h4><a href="#">${article.title}</a></h4>
+                <time datetime="2020-01-01"><i class="bi bi-clock"></i> ${article.created_at}</time>
+            </div>
+            `;
+            recentPostsContainer.innerHTML += postItem;
+        });
+    }
+
+
+
+    fetchArticles();
+
+    // Automatically slide the carousel every 1.5 seconds
+    document.querySelectorAll('.carousel').forEach(carousel => {
+        setInterval(() => {
+            const carouselInstance = bootstrap.Carousel.getInstance(carousel);
+            carouselInstance.next();
+        }, 500);
+    });
+
+</script>
+
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/aos/aos.js"></script>

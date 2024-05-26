@@ -19,41 +19,43 @@
         <div class="card-body">
           <h5 class="card-title">Edit your Article</h5>
 
-          <!-- General Form Elements -->
-          <form action="<?= base_url('/dashboard/articles/update-article/' . $article['id']) ?>" method="post" enctype="multipart/form-data">
-            <?= csrf_field() ?>
-            <div class="row mb-3">
-              <label for="title" class="col-sm-2 col-form-label">Title</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="title" name="title" value="<?= esc($article['title']) ?>" required>
-              </div>
-            </div>
-            
-             <div class="row mb-3">
-              <label for="content" class="col-sm-2 col-form-label">Content</label>
-              <div class="col-sm-10">
-                <textarea class="form-control" style="height: 100px" id="content" name="content" required><?= esc($article['content']) ?></textarea>
-              </div>
-            </div>
+            <!-- Edit Article Form -->
+            <form action="<?= base_url('/dashboard/articles/update-article/' . $article['id']) ?>" method="post" enctype="multipart/form-data">
+                <?= csrf_field() ?>
+                <div class="row mb-3">
+                    <label for="title" class="col-sm-2 col-form-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="title" name="title" value="<?= esc($article['title']) ?>" required>
+                    </div>
+                </div>
 
-            <div class="row mb-3">
-              <label for="image" class="col-sm-2 col-form-label">Upload Image</label>
-              <div class="col-sm-10">
-                <?php if (!empty($article['image'])): ?>
-                  <img src="<?= base_url('uploads/articles/' . esc($article['image'])) ?>" alt="Current Image" class="img-thumbnail mb-2" style="width: 150px;">
-                <?php endif; ?>
-                <input class="form-control" type="file" id="image" name="image" accept="image/*">
-              </div>
-            </div>
+                <div class="row mb-3">
+                    <label for="content" class="col-sm-2 col-form-label">Content</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" style="height: 100px" id="content" name="content" required><?= esc($article['content']) ?></textarea>
+                    </div>
+                </div>
 
-            <div class="row mb-3">
-              <label class="col-sm-2 col-form-label">Submit Button</label>
-              <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Update Article</button>
-              </div>
-            </div>
+                <div class="row mb-3">
+                    <label for="images" class="col-sm-2 col-form-label">Images</label>
+                    <div class="col-sm-10">
+                        <?php foreach ($images as $image): ?>
+                            <div class="mb-2">
+                                <img src="<?= base_url('uploads/articles/' . esc($image['filename'])) ?>" alt="Image" class="img-thumbnail" style="width: 150px;">
+                                <a href="<?= base_url('/dashboard/articles/edit-delete-image/' . $image['id']) ?>" class="btn btn-danger btn-sm ms-2"><i class="bi bi-x"></i></a>
+                            </div>
+                        <?php endforeach; ?>
+                        <input class="form-control" type="file" id="images" name="images[]" accept="image/*" multiple>
+                    </div>
+                </div>
 
-          </form><!-- End General Form Elements -->
+                <div class="row mb-3">
+                    <div class="col-sm-10 offset-sm-2">
+                        <button type="submit" class="btn btn-primary">Update Article</button>
+                    </div>
+                </div>
+            </form>
+            <!-- End Edit Article Form -->
 
         </div>
       </div>

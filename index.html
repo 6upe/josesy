@@ -68,7 +68,7 @@
       </div>
 
       <div class="cta d-none d-md-flex align-items-center">
-        <a href="#about" class=" top-btn scrollto">Lets Explore</a>
+        <a href="./apply.html" class=" top-btn scrollto">Apply</a>
       </div>
     </div>
   </section>
@@ -290,7 +290,7 @@
                   <div class="card-body">
                     <h5 class="card-title"><a href="">Capacity and Team Building</a></h5>
                     <p class="card-text">We facilitate team-building initiatives and capacity-building exercises to foster collaboration and synergy within organizations.</p>
-                    <a href="#contact" class="apply-btn btn btn-outline-secondary w-100" style="color: black; font-weight: bolder;">Click to Book Us!</a>
+                    <a href="./apply.html" class="apply-btn btn btn-outline-secondary w-100" style="color: black; font-weight: bolder;">Click to Book Us!</a>
                     
                   </div>
                 </div>
@@ -453,31 +453,85 @@
 
         <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">
           <div class="col-xl-9 col-lg-12 mt-4">
-            <form action="./assets/send-mail.php" method="post" role="form" class="php-email-form">
-              <div class="row">
-                <div class="col-md-6 form-group">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
-                </div>
-                <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
-                </div>
-              </div>
-              <div class="form-group mt-3">
-                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
-              </div>
-              <div class="form-group mt-3">
-                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
-              </div>
-              <div class="my-3">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Your message has been sent. Thank you!</div>
-              </div>
-              <div class="text-center"><button type="submit">Send Message</button></div>
-            </form>
+              <form id="contact-form" method="post" role="form" class="new-form">
+                  <div class="row">
+                      <div class="col-md-6 form-group">
+                          <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                      </div>
+                      <div class="col-md-6 form-group mt-3 mt-md-0">
+                          <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                      </div>
+                  </div>
+                  <div class="form-group mt-3">
+                      <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+                  </div>
+                  <div class="form-group mt-3">
+                      <textarea class="form-control" id="message" name="message" rows="5" placeholder="Message" required></textarea>
+                  </div>
+                  <div class="text-center submit-btn">
+                      <button class="btn btn-outline-secondary w-100" type="submit">Send Message</button>
+                  </div>
+              </form>
           </div>
+      </div>
+      <script>
+          document.getElementById('contact-form').addEventListener('submit', async function(e) {
+              e.preventDefault();
+  
+              const submitBtn = document.querySelector('.submit-btn');
+              submitBtn.innerHTML = `<button class="btn btn-warning w-100" type="button" disabled>
+                  <div class="spinner-border text-light spinner-border-sm" role="status">
+                      <span class="sr-only">Loading...</span>
+                  </div> Sending...
+              </button>`;
+  
+              const name = document.getElementById('name').value;
+              const email = document.getElementById('email').value;
+              const subject = document.getElementById('subject').value;
+              const message = document.getElementById('message').value;
+  
+              const payload = { name, email, subject, message };
 
-        </div>
+              console.log('Payload: ', payload);
+  
+              try {
+                  const response = await fetch('http://localhost:8080/api/v1/send-message', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify(payload)
+                  });
+  
+                  console.log('Response: ', response);
+                  const result = await response.json();
+                  console.log('Result: ', result);
+  
+                  if (result.success) {
+                      submitBtn.innerHTML = `<button class="btn btn-success w-100" type="submit">Awesome!, Your Message is Sent.</button>`;
+                      Swal.fire({
+                        title: "Message Received!",
+                        text: "Awesome!, Your Message is Sent.",
+                        icon: "success"
+                      });
+                  } else {
+                      submitBtn.innerHTML = `<button class="btn btn-danger w-100" type="submit">Oops, Something went wrong...</button>`;
+                      Swal.fire({
+                        title: "Oops!",
+                        text: "Something went wrong...",
+                        icon: "error"
+                      });
+                  }
+              } catch (error) {
+                  submitBtn.innerHTML = `<button class="btn btn-danger w-100" type="submit">Oops, Check your Internet</button>`;
+                  Swal.fire({
+                        title: "Oops!",
+                        text: "Check your Internet!",
+                        icon: "warning"
+                      });
+              }
+          });
+      </script>
 
       </div>
     </section><!-- End Contact Section -->
@@ -495,8 +549,8 @@
            
             <img width="50%" src="./assets/img/logo.png" alt="">
             <p>
-              18 Yembe Avenue, Kanini, <br> Ndola, Copperbelt, Zambia<br>
-              United States <br><br>
+              18 Yembe Avenue, Kanini, <br> Ndola, Copperbelt, <br>
+              Zambia<br><br>
               <strong>Phone:</strong> +260 964 050 710 / +260 978 289 505<br>
               <strong>Email:</strong> info@josesyltd.com<br>
             </p>
@@ -625,6 +679,7 @@
     
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/aos/aos.js"></script>
@@ -632,7 +687,7 @@
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/new-form/validate.js"></script>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

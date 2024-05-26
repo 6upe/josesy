@@ -40,7 +40,7 @@
             <div class="row mb-3">
               <label for="inputNumber" class="col-sm-2 col-form-label">Upload Image</label>
               <div class="col-sm-10">
-                <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                <input class="form-control" type="file" id="image" name="images[]" multiple accept="image/*">
               </div>
             </div>
 
@@ -58,6 +58,32 @@
 
     </div>
 
+    <!-- Right side columns -->
+    <div class="col-lg-4">
+        <!-- Articles -->
+        <div class="card">
+          <div class="card-body"><h5 class="card-title">Recently Posted </h5>
+           
+            <?php foreach ($articles as $article): ?>
+            <div class="article-item">
+            <div class="article-img-container">
+                                <img src="<?= base_url('uploads/articles/' . esc($article['images'][0]['filename'])) ?>" class="card-img-top article-img" alt="...">
+                            </div>
+            <div class="d-flex justify-content-between w-100 my-2">
+                                <a href="/dashboard/articles/edit-article/<?= $article['id'] ?>"><i class="bi bi-pencil-square  text-secondary text-mute"></i></a>
+                                <a href="/dashboard/articles/delete-article/<?= $article['id'] ?>" type="button"><i class="bi bi-trash-fill text-danger text-mute"></i></a>
+                            </div>
+              <h6><?= esc($article['title']) ?></h6>
+              <p><?= truncate_words($article['content'], 15) ?></p>
+              <a href="/dashboard/articles/all-articles" class="btn btn-outline-secondary w-100" >Read More</a>
+            </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+        <!-- End Articles -->
+        
+      </div>
+      <!-- End Right side columns -->
    
   </div>
 </section>

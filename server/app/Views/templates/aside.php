@@ -4,7 +4,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="index.html">
+        <a class="nav-link " href="/dashboard">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -34,28 +34,6 @@
         </ul>
       </li><!-- End Components Nav -->
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bar-chart"></i><span>Latest News</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="/dashboard/news/all-news">
-              <i class="bi bi-circle"></i><span>All News</span>
-            </a>
-          </li>
-          <li>
-            <a href="/dashboard/news/post-news">
-              <i class="bi bi-circle"></i><span>Post News</span>
-            </a>
-          </li>
-          <li>
-            <a href="/dashboard/news/update-News">
-              <i class="bi bi-circle"></i><span>Update News</span>
-            </a>
-          </li>
-        </ul>
-      </li><!-- End Charts Nav -->
 
       <li class="nav-heading">Training Applications & Bookings</li>
 
@@ -68,12 +46,7 @@
             <a href="/dashboard/applications/all-applications">
               <i class="bi bi-circle"></i><span>All Applications</span>
             </a>
-            <a href="/dashboard/applications/accepted-applications">
-              <i class="bi bi-circle"></i><span>Accepted Applications</span>
-            </a>
-            <a href="/dashboard/applications/declined-applications">
-              <i class="bi bi-circle"></i><span>Declined Applications</span>
-            </a>
+           
           </li>
          </ul>
       </li><!-- End Forms Nav -->
@@ -84,7 +57,7 @@
         </a>
         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="/dashboard/bookings">
+            <a href="/dashboard/bookings/all-bookings">
               <i class="bi bi-circle"></i><span>My Bookings</span>
             </a>
           </li>

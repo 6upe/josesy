@@ -10,6 +10,11 @@ class Home extends BaseController
     {
         // Load the database service
         $this->db = \Config\Database::connect();
+        
+        if (!session()->get('isLoggedIn')) {
+            redirect()->to('/auth/login');
+        }
+
     }
 
 
@@ -27,7 +32,11 @@ class Home extends BaseController
             echo 'Database connection error: ' . $e->getMessage();
         }
 
-        return view('index');
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/auth/login');
+        }
+
+        return view('/dashboard');
     }
 }
 
